@@ -7,9 +7,7 @@ router.get('/', (req, res) => {
     });
 });
 
-router.get('/test', (req, res) => {
-    res.send('Pages Test');
-});
+
 
 //Exports
 module.exports = router;
