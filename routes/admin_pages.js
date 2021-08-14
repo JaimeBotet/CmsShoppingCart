@@ -81,5 +81,29 @@ router.get('/add-page', (req, res) => {
 
 });
 
+/**
+ *  POST reorder pages
+ */
+ router.post('/reorder-pages', (req, res) => {
+    var ids = req.body['id[]'];
+
+    var count = 0;
+    
+    for(let i = 0; i < ids.length; i++){
+        var id = ids[i]; 
+        count++;
+        // We use a clousure because NodeJS is asynchronous and the value of count its restarted in every loop.
+        // With C# or PHP we wont need to use it
+        ( (count) => {
+            Page.findById(id, (err, page) => {
+                page.sorting = count;
+    
+                page.save( (err) => {
+                    if (err) return console.log(err);
+                });
+            });
+        })(count)
+    }
+});
 //Exports
 module.exports = router;
