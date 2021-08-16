@@ -40,9 +40,9 @@ app.use(bodyParser.json())
 // Express session Middleware
 app.use(session({
     secret: 'keyboard cat',
-    resave: false,
+    resave: true,
     saveUninitialized: true,
-    cookie: { secure: true }
+    // cookie: { secure: true }
   }));
 
 // Express validator middleware
