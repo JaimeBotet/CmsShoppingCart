@@ -69,41 +69,14 @@ router.get('/add-category', (req, res) => {
 });
 
 /**
- *  POST reorder category
- */
- router.post('/reorder-category', (req, res) => {
-    var ids = req.body['id[]'];
-
-    var count = 0;
-    
-    for(let i = 0; i < ids.length; i++){
-        var id = ids[i]; 
-        count++;
-        // We use a clousure because NodeJS is asynchronous and the value of count its restarted in every loop.
-        // With C# or PHP we wont need to use it
-        ( (count) => {
-            Category.findById(id, (err, category) => {
-                category.sorting = count;
-    
-                category.save( (err) => {
-                    if (err) return console.log(err);
-                });
-            });
-        })(count)
-    }
-});
-
-/**
  *  GET edit category
  */
- router.get('/edit-category/:slug', (req, res) => {
-    Category.findOne( { slug: req.params.slug}, (err, category) => {
+ router.get('/edit-category/:id', (req, res) => {
+    Category.findById( req.params.id, (err, category) => {
         if(err) return console.log(err);
 
-        res.render('admin/edit_page', {
+        res.render('admin/edit_category', {
             title: category.title,
-            slug: category.slug,
-            content: category.content,
             id: category._id
         });
     });
@@ -113,52 +86,43 @@ router.get('/add-category', (req, res) => {
 /**
  *  POST edit category
  */
- router.post('/edit-category/:slug', (req, res) => {
+ router.post('/edit-category/:id', (req, res) => {
 
     req.checkBody('title', 'Title must have a value.').notEmpty();
-    req.checkBody('content', 'Content must have a value.').notEmpty();
 
     var title = req.body.title;
-    var content = req.body.content;
-    var id = req.body.id;
-    var slug = req.body.slug.replace(/\s+/g, '-').toLowerCase();
-
-    if (slug == "") slug = title.replace(/\s+/g, '-').toLowerCase();
+    var slug = title.replace(/\s+/g, '-').toLowerCase();
+    var id = req.params.id;
 
     var errors = req.validationErrors();
 
     if (errors){
-        res.render('admin/edit_page', {
+        res.render('admin/edit_category', {
             errors: errors,
             title: title,
-            slug: slug,
-            content: content,
             id: id
         });
     } else {
+        //Check if category title is unique
         Category.findOne({slug: slug, _id:{'$ne':id}}, (err, category) => {
             if (category) {
-                req.flash('danger', 'Category slug already exists, choose another...');
-                res.render('admin/edit_page', {
+                req.flash('danger', 'Category title already exists, choose another...');
+                res.render('admin/edit_category', {
                     title: title,
-                    slug: slug,
-                    content: content,
                     id: id
                 });
             } else {
-                
                 Category.findById(id, (err, category) => {
                     if (err) return console.log(err);
 
                     category.title = title;
                     category.slug = slug;
-                    category.content = content;
                     
                     category.save((err) => {
                         if(err) return console.log(err);
     
                         req.flash('success', 'Category edited!');
-                        res.redirect('/admin/category/edit-category/' + category.slug);
+                        res.redirect('/admin/categories/edit-category/' + id);
                     });
                 });
 
