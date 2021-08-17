@@ -8,12 +8,12 @@ var Category = require('../models/category');
  *  GET category index
  */
 router.get('/', (req, res) => {
-    res.send('Cats index');
-    // Category.find({}).sort({sorting: 1}).exec((err, category) => {
-    //     res.render('admin/category', {
-    //         category: category
-    //     });
-    // });
+    Category.find((err, categories) => {
+        if (err) return console.log(err);
+        res.render('admin/categories', {
+            categories: categories
+        });
+    });
 });
 
 /**
