@@ -10,7 +10,7 @@ var Category = require('../models/category');
 router.get('/', (req, res) => {
     Category.find((err, categories) => {
         if (err) return console.log(err);
-        res.render('admin/categories', {
+        res.render('admin/categories/index', {
             categories: categories
         });
     });
@@ -22,7 +22,7 @@ router.get('/', (req, res) => {
 router.get('/add-category', (req, res) => {
     var title = "";
 
-    res.render('admin/add_category', {
+    res.render('admin/categories/add_category', {
         title: title
     });
 });
@@ -40,7 +40,7 @@ router.get('/add-category', (req, res) => {
     var errors = req.validationErrors();
 
     if (errors){
-        res.render('admin/add_category', {
+        res.render('admin/categories/add_category', {
             errors: errors,
             title: title
         });
@@ -48,7 +48,7 @@ router.get('/add-category', (req, res) => {
         Category.findOne({slug: slug}, (err, category) => {
             if (category) {
                 req.flash('danger', 'Category title already exists, choose another...');
-                res.render('admin/add_category', {
+                res.render('admin/categories/add_category', {
                     title: title
                 });
             } else {
@@ -75,7 +75,7 @@ router.get('/add-category', (req, res) => {
     Category.findById( req.params.id, (err, category) => {
         if(err) return console.log(err);
 
-        res.render('admin/edit_category', {
+        res.render('admin/categories/edit_category', {
             title: category.title,
             id: category._id
         });
@@ -97,7 +97,7 @@ router.get('/add-category', (req, res) => {
     var errors = req.validationErrors();
 
     if (errors){
-        res.render('admin/edit_category', {
+        res.render('admin/categories/edit_category', {
             errors: errors,
             title: title,
             id: id
@@ -107,7 +107,7 @@ router.get('/add-category', (req, res) => {
         Category.findOne({slug: slug, _id:{'$ne':id}}, (err, category) => {
             if (category) {
                 req.flash('danger', 'Category title already exists, choose another...');
-                res.render('admin/edit_category', {
+                res.render('admin/categories/edit_category', {
                     title: title,
                     id: id
                 });

@@ -9,7 +9,7 @@ var Page = require('../models/page');
  */
 router.get('/', (req, res) => {
     Page.find({}).sort({sorting: 1}).exec((err, pages) => {
-        res.render('admin/pages', {
+        res.render('admin/pages/index', {
             pages: pages
         });
     });
@@ -23,7 +23,7 @@ router.get('/add-page', (req, res) => {
     var slug = "";
     var content = "";
 
-    res.render('admin/add_page', {
+    res.render('admin/pages/add_page', {
         title: title,
         slug: slug,
         content: content
@@ -47,7 +47,7 @@ router.get('/add-page', (req, res) => {
     var errors = req.validationErrors();
 
     if (errors){
-        res.render('admin/add_page', {
+        res.render('admin/pages/add_page', {
             errors: errors,
             title: title,
             slug: slug,
@@ -57,7 +57,7 @@ router.get('/add-page', (req, res) => {
         Page.findOne({slug: slug}, (err, page) => {
             if (page) {
                 req.flash('danger', 'Page slug already exists, choose another...');
-                res.render('admin/add_page', {
+                res.render('admin/pages/add_page', {
                     title: title,
                     slug: slug,
                     content: content
@@ -113,7 +113,7 @@ router.get('/add-page', (req, res) => {
     Page.findById( req.params.id, (err, page) => {
         if(err) return console.log(err);
 
-        res.render('admin/edit_page', {
+        res.render('admin/pages/edit_page', {
             title: page.title,
             slug: page.slug,
             content: page.content,
@@ -141,7 +141,7 @@ router.get('/add-page', (req, res) => {
     var errors = req.validationErrors();
 
     if (errors){
-        res.render('admin/edit_page', {
+        res.render('admin/pages/edit_page', {
             errors: errors,
             title: title,
             slug: slug,
@@ -152,7 +152,7 @@ router.get('/add-page', (req, res) => {
         Page.findOne({slug: slug, _id:{'$ne':id}}, (err, page) => {
             if (page) {
                 req.flash('danger', 'Page slug already exists, choose another...');
-                res.render('admin/edit_page', {
+                res.render('admin/pages/edit_page', {
                     title: title,
                     slug: slug,
                     content: content,

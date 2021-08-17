@@ -7,15 +7,24 @@ var resizeImg = require('resize-img');
 // Get Product Model
 var Product = require('../models/product');
 
+// Get Category Model
+var Category = require('../models/category');
+
 /**
  *  GET products index
  */
 router.get('/', (req, res) => {
-    Product.find({}).sort({sorting: 1}).exec((err, products) => {
+    var count;
+    Product.count( (err,c) => {
+        count = c;
+    })
+
+    Product.find( (error, products) => {
         res.render('admin/products', {
-            products: products
+            products:   products,
+            count:      count
         });
-    });
+    })
 });
 
 /**
