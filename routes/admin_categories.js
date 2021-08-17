@@ -140,7 +140,7 @@ router.get('/add-category', (req, res) => {
         if(err) return console.log(err);
     
         req.flash('success', 'Category deleted!');
-        res.redirect('/admin/category/');
+        res.redirect('/admin/categories/');
     });
 });
 
