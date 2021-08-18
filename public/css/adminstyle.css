@@ -9,3 +9,8 @@
 #imgPreview {
     margin: 20px;
 }
+
+#noImage {
+    width: 100px;
+    height: 100px;
+}
