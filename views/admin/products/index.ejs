@@ -1,47 +1,45 @@
 
 <%- include('../../_layouts/adminheader') %>
 
-<h2 class="page-title">Pages</h2>
-<a href="/admin/pages/add-page" class="btn btn-primary">Add a new page</a>
+<h2 class="product-title">Products</h2>
+<a href="/admin/pages/add-page" class="btn btn-primary">Add a new product</a>
 <br><br>
 
-<table class="table table-striped sorting">
+   
+<% if (count > 0) { %>
+
+<table class="table table-striped">
     <thead>
         <tr class="home">
-            <th>Title</th>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Category</th>
+            <th>Image</th>
             <th>Edit</th>
             <th>Delete</th>
         </tr>
     </thead>
     <tbody>
-        <% pages.forEach( (page) => {%>
-        <tr id="id_<%= page.id %>" class="<%= page.slug %>">
-            <td><%= page.title %></td>
-            <td><a href="/admin/pages/edit-page/<%= page._id %>">Edit</a></td>
-            <% if (page.slug == "home") {%>
-            <td></td>
-            <% } else {%>
-            <td><a class="confirmDeletion" href="/admin/pages/delete-page/<%= page._id %>">Delete</a></td>
-            <% } %>
+        <% products.forEach( (product) => {%>
+        <tr>
+            <td><%= product.title %></td>
+            <td><%= parseFloat(product.price).toFixed(2) %> €</td>
+            <td><%= product.category %></td>
+            <td>
+                <% if (product.image == '') { %>
+                <img src="/images/noimage.png">
+                <% } else { %>
+                <img src="/product_images/<%= product._id %>/<%= product.image %>">
+                <% } %>
+            </td>
+            <td><a href="/admin/products/edit-product/<%= product._id %>">Edit</a></td>
+            <td><a class="confirmDeletion" href="/admin/products/delete-product/<%= product._id %>">Delete</a></td>
         </tr>
         <% }); %>
     </tbody>
 </table>
-
-<!-- START : For Drag and Drop sorting of pages -->
-<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
-<script>
-    $('tbody').sortable({
-        items: "tr:not('.home')",
-        placeholder: "ui-state-highlight",
-        update: () => {
-            let ids = $('tbody').sortable("serialize");
-            let url = "/admin/pages/reorder-pages";
-
-            $.post(url, ids);
-        }
-    })
-</script>
-<!--  END -->
+<% } else { %>
+<h3 class="text-center">There are no products</h3>
+<% } %>
 
 <%- include('../../_layouts/adminfooter') %>
