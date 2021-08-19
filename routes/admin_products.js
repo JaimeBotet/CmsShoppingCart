@@ -137,7 +137,6 @@ router.get('/add-product', (req, res) => {
     req.session.errors = null;
 
     Category.find( (err, categories) => {
-
         Product.findById( req.params.id, (err, product) => {
             if(err) {
                 console.log(err);
@@ -158,9 +157,10 @@ router.get('/add-product', (req, res) => {
                             desc: product.desc,
                             categories: categories,
                             category: product.category.replace(/\s+/g, '-').toLowerCase(),
-                            price: product.price,
+                            price: parseFloat(product.price).toFixed(2),
                             image: product.image,
-                            galleryImages: galleryImages
+                            galleryImages: galleryImages,
+                            id: product._id
                         });
                     } 
                 });
