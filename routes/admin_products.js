@@ -43,7 +43,7 @@ router.get('/add-product', (req, res) => {
             categories: categories,
             price: price
         });
-    })
+    });
 });
 
 /**
@@ -128,45 +128,45 @@ router.get('/add-product', (req, res) => {
 });
 
 /**
- *  POST reorder products
- */
- router.post('/reorder-products', (req, res) => {
-    var ids = req.body['id[]'];
-
-    var count = 0;
-    
-    for(let i = 0; i < ids.length; i++){
-        var id = ids[i]; 
-        count++;
-        // We use a clousure because NodeJS is asynchronous and the value of count its restarted in every loop.
-        // With C# or PHP we wont need to use it
-        ( (count) => {
-            Product.findById(id, (err, product) => {
-                product.sorting = count;
-    
-                product.save( (err) => {
-                    if (err) return console.log(err);
-                });
-            });
-        })(count)
-    }
-});
-
-/**
  *  GET edit product
  */
  router.get('/edit-product/:id', (req, res) => {
-    Product.findById( req.params.id, (err, product) => {
-        if(err) return console.log(err);
 
-        res.render('admin/edit_page', {
-            title: product.title,
-            slug: product.slug,
-            content: product.content,
-            id: product._id
+    let errors;
+    if(req.session.errors) errors = req.session.errors;
+    req.session.errors = null;
+
+    Category.find( (err, categories) => {
+
+        Product.findById( req.params.id, (err, product) => {
+            if(err) {
+                console.log(err);
+                res.redirect('/admin/products');
+            }
+            else {
+                var galleryDir = "./public/product_images/" + product._id + "/gallery";
+                var galleryImages = null;
+
+                fs.readdir(galleryDir, (err, files) => {
+                    if (err) console.log(err);
+                    else{
+                        galleryImages = files;
+                        
+                        res.render('admin/products/edit_product', {
+                            title: product.title,
+                            errors: errors,
+                            desc: product.desc,
+                            categories: categories,
+                            category: product.category.replace(/\s+/g, '-').toLowerCase(),
+                            price: product.price,
+                            image: product.image,
+                            galleryImages: galleryImages
+                        });
+                    } 
+                });
+            }
         });
     });
-
 });
 
 /**
