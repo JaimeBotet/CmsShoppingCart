@@ -106,17 +106,14 @@ router.get('/add-product', (req, res) => {
 
                 product.save((err) => {
                     if(err) return console.log(err);
-                    
-                    // TODO the error is here, check it out before you continue
-                    mkdirp('/public/product_images/' + product._id, (err) => { return console.log('err1:' + err)});
-                    mkdirp('/public/product_images/' + product._id +'/gallery', (err) => { return console.log('err2:' + err)});
-                    mkdirp('/public/product_images/' + product._id + '/gallery/thumbs', (err) => { return console.log('err3:' + err)});
 
+                    let newDir = './public/product_images/' + product._id;
+                    mkdirp.sync(newDir + '/gallery/thumbs');
 
                     //Move local image to public folder image
                     if (imageFile != "") {
                         var productImage = req.files.image;
-                        var public_path = '/public/product_images/' + product._id + '/' + imageFile;
+                        var public_path = newDir + '/' + imageFile;
 
                         productImage.mv(public_path, (err) =>  console.log(err));
                     }
