@@ -238,6 +238,26 @@ router.get('/add-product', (req, res) => {
 });
 
 /**
+ *  POST product gallery
+ */
+ router.post('/product-gallery/:id', (req, res) => {
+    let productImage = req.files.file;
+    let id = req.params.id;
+    let path = 'public/product_images/' + id + '/gallery/' + req.files.file.name;
+    let thumbsPath = 'public/product_images/' + id + '/gallery/thumbs/' + req.files.file.name;
+
+    productImage.mv(path, (err) =>  {
+        if (err) console.log(err);
+
+        resizeImg(fs.readFileSync(path), {width: 100, height: 100}).then( (buff) => {
+            fs.writeFileSync(thumbsPath, buff);
+        });
+    });
+
+    res.sendStatus(200);
+});
+
+/**
  *  GET delete product
  */
  router.get('/delete-product/:id', (req, res) => {

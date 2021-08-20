@@ -64,7 +64,12 @@
 </ul>
 
 <br><br>
-<form action="/admin/products/product-gallery/<%= id %>" method="post" enctype="multipart/form-data" class="dropzone" id="dropzoneForm"></form>
+<form action="/admin/products/product-gallery/<%= id %>" method="post" enctype="multipart/form-data" class="dropzone" id="dropzoneForm">
+    <div class="fallback">
+        <input type="file" name="file" id="" multiple>
+        <input type="submit" value="Upload">
+    </div>
+</form>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.2/basic.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.2/dropzone.css">
@@ -91,7 +96,7 @@
     //Dropzone
     Dropzone.options.dropzoneForm = {
         acceptedFiles: "image/*",
-        init: () =>{
+        init: function(){
             this.on("queuecomplete", (file) => {
                 setTimeout( () => {
                     location.reload();
