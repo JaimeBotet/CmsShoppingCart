@@ -72,6 +72,14 @@ router.get('/add-page', (req, res) => {
                 page.save((err) => {
                     if(err) return console.log(err);
 
+                    // Updating the client view when adding a page
+                    Page.find({}).sort({sorting: 1}).exec((err, pages) => {
+                        if(err) console.log(err);
+                        else {
+                            req.app.locals.pages = pages;
+                        }
+                    });
+
                     req.flash('success', 'Page added!');
                     res.redirect('/admin/pages');
                 });
@@ -81,12 +89,9 @@ router.get('/add-page', (req, res) => {
 
 });
 
-/**
- *  POST reorder pages
- */
- router.post('/reorder-pages', (req, res) => {
-    var ids = req.body['id[]'];
 
+// Sort pages function
+function sortPages(ids, callback) {
     var count = 0;
     
     for(let i = 0; i < ids.length; i++){
@@ -100,10 +105,31 @@ router.get('/add-page', (req, res) => {
     
                 page.save( (err) => {
                     if (err) return console.log(err);
+                    ++count;
+                    if(count >= ids.length){
+                        callback();
+                    }
                 });
             });
         })(count)
     }
+}
+/**
+ *  POST reorder pages
+ */
+ router.post('/reorder-pages', (req, res) => {
+    var ids = req.body['id[]'];
+
+    // Updating client view when reordering a page
+    sortPages(ids, () => {
+        Page.find({}).sort({sorting: 1}).exec((err, pages) => {
+            if(err) console.log(err);
+            else {
+                req.app.locals.pages = pages;
+            }
+        });
+    })
+
 });
 
 /**
@@ -170,6 +196,14 @@ router.get('/add-page', (req, res) => {
                     page.save((err) => {
                         if(err) return console.log(err);
     
+                        // Updating the client view when editing a page
+                        Page.find({}).sort({sorting: 1}).exec((err, pages) => {
+                            if(err) console.log(err);
+                            else {
+                                req.app.locals.pages = pages;
+                            }
+                        });
+
                         req.flash('success', 'Page edited!');
                         res.redirect('/admin/pages/edit-page/' + id);
                     });
@@ -188,6 +222,14 @@ router.get('/add-page', (req, res) => {
     Page.findByIdAndRemove(req.params.id, (err) => {
         if(err) return console.log(err);
     
+        // Update the client view of pages when deleting a page
+        Page.find({}).sort({sorting: 1}).exec((err, pages) => {
+            if(err) console.log(err);
+            else {
+                req.app.locals.pages = pages;
+            }
+        });
+
         req.flash('success', 'Page deleted!');
         res.redirect('/admin/pages/');
     });
