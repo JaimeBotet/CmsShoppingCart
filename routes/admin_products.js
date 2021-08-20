@@ -258,6 +258,28 @@ router.get('/add-product', (req, res) => {
 });
 
 /**
+ *  GET delete gallery image
+ * admin/products/delete-image/<%= image %>?id=<%= id %>
+ */
+ router.get('/delete-image/:image', (req, res) => {
+    let OriginalImage = 'public/product_images/' + req.query.id + '/gallery/' + req.params.image;
+    let thumbImage = 'public/product_images/' + req.query.id + '/gallery/thumbs/' + req.params.image;
+
+    fs.remove(OriginalImage, (err) => {
+        if(err) console.log(err);
+        else{
+            fs.remove(thumbImage, (err) => {
+                if(err) console.log(err);
+                else {
+                    req.flash('success', 'Gallery image deleted!');
+                    res.redirect('/admin/products/edit-product/' + req.query.id);
+                }
+            });
+        }
+    })
+});
+
+/**
  *  GET delete product
  */
  router.get('/delete-product/:id', (req, res) => {
