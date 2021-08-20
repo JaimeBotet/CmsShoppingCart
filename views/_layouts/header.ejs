@@ -19,13 +19,17 @@
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
-          <h2><a class="navbar-brand" href="#">CmsShoppingCart</a></h2>
+          <h2><a class="navbar-brand" href="/">CmsShoppingCart</a></h2>
         </div>
         <div id="navbarCollapse" class="collapse navbar-collapse">
           <ul class="navbar-nav me-auto mb-2 mb-md-0">
-            <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">About</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+            <% pages.forEach( (page) => {%>
+              <% if (page.slug == "home") {%>
+              <li class="nav-item"><a class="nav-link" href="/"><%= page.title %></a></li>
+              <% } else {%>
+              <li class="nav-item"><a class="nav-link" href="<%= page.slug %>"><%= page.title %></a></li>
+              <% } %>
+            <% }); %>
           </ul>
         </div>
         <div class="text-right">
