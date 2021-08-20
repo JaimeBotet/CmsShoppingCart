@@ -283,12 +283,18 @@ router.get('/add-product', (req, res) => {
  *  GET delete product
  */
  router.get('/delete-product/:id', (req, res) => {
-    Product.findByIdAndRemove(req.params.id, (err) => {
-        if(err) return console.log(err);
-    
-        req.flash('success', 'Product deleted!');
-        res.redirect('/admin/products/');
-    });
+    let id = req.params.id;
+    let path = 'public/product_images/' + id;
+    fs.remove(path, (err) => {
+        if(err) console.log(err);
+        else {
+            Product.findByIdAndRemove(id, (err) => {
+                if(err) console.log(err);
+            });
+            req.flash('success', 'Product deleted!');
+            res.redirect('/admin/products');
+        }
+    })
 });
 
 //Exports
