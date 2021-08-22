@@ -1,4 +1,5 @@
 var express = require('express');
+var fs = require('fs-extra');
 var router = express.Router();
 
 // Get Product Model
@@ -42,6 +43,32 @@ router.get('/:category', (req, res) => {
             });
         })
     })
+});
+
+/**
+ * GET product details
+ */
+router.get('/:category/:product', (req, res) => {
+    var galleryImages = null;
+
+    Product.findOne( {slug: req.params.product} , (err, product) => {
+        if (err) console.log(err);
+        else {
+            var galleryDir = 'public/product_images/' + product._id + '/gallery';
+            fs.readdir(galleryDir, (err, files) => {
+                if (err) console.log(err);
+                else {
+                    galleryImages = files;
+
+                    res.render('product', {
+                        title: product.title,
+                        p: product,
+                        galleryImages: galleryImages
+                    });
+                }
+            })
+        }
+    });
 });
 
 
