@@ -115,6 +115,15 @@ router.get('/update/:product', (req, res) => {
     res.redirect('/cart/checkout');
  });  
 
+ /**
+ * GET Buy Now
+ */
+ router.get('/buynow', (req, res) => {
+    delete req.session.cart;
+
+    res.sendStatus(200);
+ });  
+
 
 
 
