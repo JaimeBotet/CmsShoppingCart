@@ -1,5 +1,5 @@
 img.pimage {
-    width: 150px;;
+    width: 150px;
 }
 
 a.pi {
@@ -20,4 +20,12 @@ ul.gallery li {
     display: inline-block;
     margin: 20px;
     list-style: none;
+}
+
+img.cpi {
+    width: 100px;
+}
+
+table.alignmiddle td {
+    vertical-align: middle;
 }

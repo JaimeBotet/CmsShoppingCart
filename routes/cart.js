@@ -53,6 +53,18 @@ router.get('/add/:product', (req, res) => {
     });
 });
 
+/**
+ * GET Checkout page
+ */
+router.get('/checkout', (req, res) => {
+
+    res.render('checkout', {
+        title: 'Checkout',
+        cart: req.session.cart
+    })
+    
+});
+
 
 
 
