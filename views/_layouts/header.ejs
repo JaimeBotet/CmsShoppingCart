@@ -37,10 +37,21 @@
               <% } %>
             <% }); %>
           </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li>
+              <a href="/cart/checkout">My Cart(
+                <% if (typeof cart !== "undefined") {%>
+                  <%= cart.length %>
+                <% } else { %>
+                  0
+                <% } %>
+              )</a>
+            </li>
+          </ul>
         </div>
-        <div class="text-right">
+        <!-- <div class="text-right">
           <a class="nav-link" href="/admin/pages/">Admin</a>
-        </div>
+        </div> -->
       </div>
     </nav>
 
