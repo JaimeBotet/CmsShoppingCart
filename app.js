@@ -123,12 +123,14 @@ app.use(passport.session());
 // cart will be a global variable array filled with product objects
 app.get('*', (req, res, next) => {
     res.locals.cart = req.session.cart;
+    res.locals.user = req.user || null;
     next();
 })
 
 //Set routes
 var pages = require('./routes/pages');
 var cart = require('./routes/cart');
+var users = require('./routes/users');
 var products = require('./routes/products');
 var adminPages = require('./routes/admin_pages');
 var adminCategories = require('./routes/admin_categories');
@@ -139,6 +141,7 @@ app.use('/admin/categories', adminCategories);
 app.use('/admin/products', adminProducts);
 app.use('/products', products);
 app.use('/cart', cart);
+app.use('/users', users);
 app.use('/', pages);
 
 
