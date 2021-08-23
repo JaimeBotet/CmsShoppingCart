@@ -3,6 +3,8 @@ var router = express.Router();
 var mkdirp = require('mkdirp');
 var fs = require('fs-extra');
 var resizeImg = require('resize-img');
+var auth = require('../config/auth');
+var isAdmin = auth.isAdmin;
 
 // Get Product Model
 var Product = require('../models/product');
@@ -13,7 +15,7 @@ var Category = require('../models/category');
 /**
  *  GET products index
  */
-router.get('/', (req, res) => {
+router.get('/', isAdmin, (req, res) => {
     var count;
     Product.count( (err,c) => {
         count = c;
@@ -30,7 +32,7 @@ router.get('/', (req, res) => {
 /**
  *  GET add product
  */
-router.get('/add-product', (req, res) => {
+router.get('/add-product', isAdmin, (req, res) => {
     var title = "";
     var desc = "";
     var price = "";
@@ -127,7 +129,7 @@ router.get('/add-product', (req, res) => {
 /**
  *  GET edit product
  */
- router.get('/edit-product/:id', (req, res) => {
+ router.get('/edit-product/:id', isAdmin, (req, res) => {
 
     let errors;
     if(req.session.errors) errors = req.session.errors;
@@ -259,9 +261,8 @@ router.get('/add-product', (req, res) => {
 
 /**
  *  GET delete gallery image
- * admin/products/delete-image/<%= image %>?id=<%= id %>
  */
- router.get('/delete-image/:image', (req, res) => {
+ router.get('/delete-image/:image', isAdmin, (req, res) => {
     let OriginalImage = 'public/product_images/' + req.query.id + '/gallery/' + req.params.image;
     let thumbImage = 'public/product_images/' + req.query.id + '/gallery/thumbs/' + req.params.image;
 
@@ -282,7 +283,7 @@ router.get('/add-product', (req, res) => {
 /**
  *  GET delete product
  */
- router.get('/delete-product/:id', (req, res) => {
+ router.get('/delete-product/:id', isAdmin, (req, res) => {
     let id = req.params.id;
     let path = 'public/product_images/' + id;
     fs.remove(path, (err) => {
